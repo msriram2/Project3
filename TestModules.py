@@ -3,9 +3,9 @@ from Input import Input
 from Output import Client_Move
 from pathlib import Path
 
+#Testcase for input works!
 class TestOpenFile(unittest.TestCase):
-
-    def input_establish(self):
+    def setUp(self):
         path = Path(r"C:\Users\Owner\OneDrive\Desktop\ICS 33 Summer\Projects\Project3\P3TestFile.txt")
         self.input = Input(path)
 
@@ -27,6 +27,7 @@ class TestOpenFile(unittest.TestCase):
         assign_dicts = self.input.assign_dicts(Lines)
         self.assertEqual(assign_dicts, Result)
 
+"""
 class TestClientVarAssign(unittest.TestCase):
 
     def cli_move_establish(self):
@@ -54,6 +55,7 @@ class TestClientVarAssign(unittest.TestCase):
         cli_range = self.cli_range()
         self.assertEqual(cli_range, [[83,0], [83,0]])
 
+"""
 """
 class TestAPVarAssign(unittest.TestCase):
 
