@@ -1,6 +1,7 @@
 from Input import Input
 import math
 
+#Input module works! Everything is opened, and a list of dictionaries is returned!
 class Client_Move(Input):
     # Keep a list of actions for each move the client makes
 
