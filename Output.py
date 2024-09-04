@@ -2,11 +2,10 @@ from Input import Input
 import math
 
 #Input module works! Everything is opened, and a list of dictionaries is returned!
-class Client_Move(Input):
+class Client_Move():
     # Keep a list of actions for each move the client makes
-
     def __init__(self, Device):
-        super().__init__(Device)
+        self.Device = Device
         self.cli_coord = []
         self.cli_RSSI = ''
         self.cli_range = []
@@ -23,27 +22,31 @@ class Client_Move(Input):
                     self.cli_coord.append(cli_coord_y)
                     return self.cli_coord
 
-    def cli_rssi(self):
-        self.cli_RSSI = self.Device['Minimal_RSSI']
-        return self.cli_RSSI
+    #Test Works!
+    def cli_rssi(self, Device):
+        for Dict in Device:
+            if Dict['Type'] == 'CLIENT':
+                self.cli_RSSI = int(Dict['Minimal_RSSI'])
+                return self.cli_RSSI
 
+    #Test Works!
     def cli_calculate_range(self):
         cli_x_range = []
         cli_y_range = []
         for Dict in self.Device:
             if Dict['Type'] == 'CLIENT':
-                cli_range_x_right = int(self.Device['Coord_x']) + int(self.Device['Minimal_RSSI'])
+                cli_range_x_right = int(Dict['Coord_x']) + int(Dict['Minimal_RSSI'])
                 cli_x_range.append(cli_range_x_right)
-                cli_range_x_left = int(self.Device['Coord_x']) - int(self.Device['Minimal_RSSI'])
-                if cli_range_x_left > 0:
+                cli_range_x_left = int(Dict['Coord_x']) - int(Dict['Minimal_RSSI'])
+                if cli_range_x_left < 0:
                     cli_range_x_left = 0
                 cli_x_range.append(cli_range_x_left)
                 self.cli_range.append(cli_x_range)
 
-                cli_range_y_right = self.Device['Coord_y'] + self.Device['Minimal_RSSI']
+                cli_range_y_right = int(Dict['Coord_y']) + int(Dict['Minimal_RSSI'])
                 cli_y_range.append(cli_range_y_right)
-                cli_range_y_left = self.Device['Coord_y'] - self.Device['Minimal_RSSI']
-                if cli_range_y_left > 0:
+                cli_range_y_left = int(Dict['Coord_y']) - int(Dict['Minimal_RSSI'])
+                if cli_range_y_left < 0:
                     cli_range_y_left = 0
                 cli_y_range.append(cli_range_y_left)
                 self.cli_range.append(cli_y_range)
