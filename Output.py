@@ -62,24 +62,24 @@ class Client_Move():
 
 
 class AC(Input):
-    # Should contain:
-    # Information about APs
-    # Highly preferred channels 1, 6, and 11
-    # If 1, 6, or 11 is not available, then the channel should switch to one lower than it's current channel.
-    # Should log all channel assignments and changes into a binary file.
     def __init__(self, Device):
         super().__init__(Device)
-        self.pref_channel = [1, 6, 11]
+        self.ac_log = []
 
     def identify_channel(self):
+        pref_channel = [1, 6, 11]
         for dict in self.Device:
             if dict['Type'] == 'AP':
-                for channel in self.pref_channel:
-                    if dict['Channel'] != channel:
-                        dict['Channel'] -= 1
-            return f'AC REQUIRES {dict['APName']} TO CHANGE CHANNEL TO {dict['Channel']}'
+                for channel in pref_channel:
+                    if int(dict['Channel']) != channel:
+                        old_value = int(dict['Channel'])
+                        old_value -= 1
+                        dict['Channel'] = old_value
+                        identify_statement = f'AC REQUIRES {dict["APName"]} TO CHANGE CHANNEL TO {dict["Channel"]}'
+                        self.ac_log.append(identify_statement)
+                        return identify_statement
 
-
+"""
 class AP_Move(Input):
     #GOAL: The class should return a list of dictionaries containing one or more APs that can be accessed by the Output
     #class but cannot be updated because AP coordinates and range should remain the same?
@@ -114,7 +114,7 @@ class AP_Move(Input):
                 self.ap_coord.append(ap_coord_y)
                 return self.ap_coord
 
-    """
+    
     def ap_rssi(self):
         #What is power? Will have to better understand RSSI to calculate.
         if self.Device['Minimal_RSSI'] != '':
@@ -123,7 +123,7 @@ class AP_Move(Input):
             #Run calculation here
             ap_rssi = #power - 20 * math.log(
         return ap_rssi
-    """
+    
 
     def ap_range(self):
         for dict in self.Device:
