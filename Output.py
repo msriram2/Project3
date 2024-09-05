@@ -10,17 +10,24 @@ class Client_Move():
         self.cli_RSSI = ''
         self.cli_range = []
 
-    def __set__(self, name, value):
-        if name == self.cli_coord:
-            super().__setattr__(self, name, value)
-        else:
-            for dict in self.Device:
-                if dict['Type'] == 'CLIENT':
-                    cli_coord_x = self.Device['Coord_x']
-                    cli_coord_y = self.Device['Coord_y']
-                    self.cli_coord.append(cli_coord_x)
-                    self.cli_coord.append(cli_coord_y)
-                    return self.cli_coord
+    def __setattr__(self, name, value):
+        if name == 'Device':
+            if isinstance(name, list):
+                for Dict in name:
+                    if Dict['Type'] == 'CLIENT':
+                        value = Dict
+            else:
+                raise ValueError("Instance must be a list")
+        super().__setattr__(name, value)
+
+    def establish_cli_coords(self):
+        for Dict in self.Device:
+            if Dict['Type'] == 'CLIENT':
+                cli_coord_x = int(self.Device['Coord_X'])
+                cli_coord_y = int(self.Device['Coord_y'])
+                self.cli_coord.append(cli_coord_x)
+                self.cli_coord.append(cli_coord_y)
+                return self.cli_coord
 
     #Test Works!
     def cli_rssi(self, Device):
@@ -53,6 +60,26 @@ class Client_Move():
 
         return self.cli_range
 
+
+class AC(Input):
+    # Should contain:
+    # Information about APs
+    # Highly preferred channels 1, 6, and 11
+    # If 1, 6, or 11 is not available, then the channel should switch to one lower than it's current channel.
+    # Should log all channel assignments and changes into a binary file.
+    def __init__(self, Device):
+        super().__init__(Device)
+        self.pref_channel = [1, 6, 11]
+
+    def identify_channel(self):
+        for dict in self.Device:
+            if dict['Type'] == 'AP':
+                for channel in self.pref_channel:
+                    if dict['Channel'] != channel:
+                        dict['Channel'] -= 1
+            return f'AC REQUIRES {dict['APName']} TO CHANGE CHANNEL TO {dict['Channel']}'
+
+
 class AP_Move(Input):
     #GOAL: The class should return a list of dictionaries containing one or more APs that can be accessed by the Output
     #class but cannot be updated because AP coordinates and range should remain the same?
@@ -64,19 +91,30 @@ class AP_Move(Input):
 
     def __init__(self, Device):
         super().__init__(Device)
-        self.aps = [] #List containing dictionaries of APs.
+        self.aps = [] #List containing dictionaries of APs
+        self.ap_coord = []
+        self.ap_total_range = []
 
     def __setattr__(self, name, value):
-        if name == self.ap_coord:
-            super().__setattr__(self, name, value)
-        else:
-            ap_coord_x = self.Device['Coord_x']
-            ap_coord_y = self.Device['Coord_y']
-            self.ap_coord.append(ap_coord_x)
-            self.ap_coord.append(ap_coord_y)
-            return self.ap_coord
+        if name == 'Device':
+            if isinstance(name, list):
+                for Dict in name:
+                    if Dict['Type'] == 'AP':
+                        value = Dict
+            else:
+                raise ValueError("Instance must be a list")
+        super().__setattr__(name, value)
 
-"""
+    def establish_ap_coords(self):
+        for Dict in self.Device:
+            if Dict['Type'] == 'AP':
+                ap_coord_x = int(self.Device['Coord_X'])
+                ap_coord_y = int(self.Device['Coord_y'])
+                self.ap_coord.append(ap_coord_x)
+                self.ap_coord.append(ap_coord_y)
+                return self.ap_coord
+
+    """
     def ap_rssi(self):
         #What is power? Will have to better understand RSSI to calculate.
         if self.Device['Minimal_RSSI'] != '':
@@ -85,41 +123,35 @@ class AP_Move(Input):
             #Run calculation here
             ap_rssi = #power - 20 * math.log(
         return ap_rssi
+    """
 
     def ap_range(self):
-        ap_total_range = []
-
         for dict in self.Device:
             if dict['Type'] == 'AP':
-                ap_x_range = ()
-                ap_y_range = ()
+                ap_x_range = []
+                ap_y_range = []
 
-                ap_range_x_right = self.Device['Coord_x'] + self.Device['Minimal_RSSI']
+                ap_range_x_right = int(self.Device['Coord_x']) + int(self.Device['Minimal_RSSI'])
                 ap_x_range.append(ap_range_x_right)
-                ap_range_x_left = self.Device['Coord_x'] - self.Device['Minimal_RSSI']
+                ap_range_x_left = int(self.Device['Coord_x']) - int(self.Device['Minimal_RSSI'])
                 if ap_range_x_left > 0:
                     ap_range_x_left = 0
                 ap_x_range.append(ap_range_x_left)
-                ap_total_range.append(ap_x_range)
+                self.ap_total_range.append(ap_x_range)
 
-                ap_range_y_right = self.Device['Coord_y'] + self.Device['Minimal_RSSI']
+                ap_range_y_right = int(self.Device['Coord_y']) + int(self.Device['Minimal_RSSI'])
                 ap_y_range.append(ap_range_y_right)
-                ap_range_y_left = self.Device['Coord_y'] - self.Device['Minimal_RSSI']
+                ap_range_y_left = int(self.Device['Coord_y']) - int(self.Device['Minimal_RSSI'])
                 if ap_range_y_left > 0:
                     ap_range_y_left = 0
                 ap_y_range.append(ap_range_y_left)
-                ap_total_range.append(ap_y_range)
+                self.ap_total_range.append(ap_y_range)
 
-                return ap_total_range
+                return self.ap_total_range
 
-    def __dict__(self):
+    def total_aps(self):
 
-class AC(Input, Client_Move, AP_Move):
-    #Should contain:
-        #Information about APs
-        #Highly preferred channels 1, 6, and 11
-        #If 1, 6, or 11 is not available, then the channel should switch to one lower than it's current channel.
-        #Should log all channel assignments and changes into a binary file.
+
 """
 """
 
