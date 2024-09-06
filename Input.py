@@ -1,13 +1,11 @@
 from pathlib import Path
 
-#GOAL: Return a list of dictionaries labeling each element of the line so the output function can work with it
 class Input:
 
     def __init__(self, Path):
         self.Path = Path
         self.Device = []
 
-    #Open file WORKS!
     def open_file(self):
         Lines = []
         with open(self.Path, 'r') as file:
@@ -16,7 +14,6 @@ class Input:
                 Lines.append(Line)
             return Lines
 
-    #Assign Dicts works!
     def assign_dicts(self, Lines):
         for line in Lines:
             if line[0] == 'AP':
@@ -61,8 +58,6 @@ class Input:
 
         return self.Device
 
-
-#if __name__ == '__main__':
 
 
         

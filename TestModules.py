@@ -114,6 +114,18 @@ class TestFinalCoord(unittest.TestCase):
         establish_final_coord = self.final_coord.establish_final_coord()
         self.assertEqual(establish_final_coord, [10, 9])
 
+class TestUpdateCoords(unittest.TestCase):
+    def setUp(self):
+        Device = [{'Type': 'AP', 'APName': 'AP1', 'Coord_x': '0', 'Coord_y': '0', 'Channel': '6', 'Power': '20',
+                   'Frequency': '2.4/5', 'Standard': 'WiFi6', 'Supports_11k': 'true', 'Supports_11v': 'true',
+                   'Supports_11r': 'true', 'Coverage Radius': '50', 'Device Limit': '10', 'Minimal RSSI': '75'},
+                  {'Type': 'CLIENT', 'Client Name': 'Client1', 'Coord_x': '10', 'Coord_y': '10', 'Standard': 'WiFi6',
+                   'Speed': '2.4/5', 'Supports_11k': 'true', 'Supports_11v': 'true', 'Supports_11r': 'true',
+                   'Minimal_RSSI': '73'},
+                  {'Type': 'MOVE', 'Client Name': 'Client1', 'Coord_x': '10', 'Coord_y': '9'}]
+        self.final_coord = Final_Coord(Device)
+
+
 
 
 

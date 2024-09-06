@@ -1,9 +1,8 @@
 """
-Understanding of structure:
+Project 3~  Objective of the code:
 
-From what I can understand about the structure of the code:
-- Each file represents a device with an AP, a client, and where the client should move to.
-- The input should be returning a Device, which is a list containing a dictionary of an AP(s), a client,
-and the coordinate the client should be moving to.
+Project 3 aims to simulate the process of how a client can connect to and function under a specific AP based on
+the strength of the connection between client and AP and the range that both client and AP can function at.
 
+The program
 """
