@@ -71,6 +71,7 @@ class AP_Move():
         self.aps = []
         self.ap_coord = []
         self.ap_total_range = []
+        self.ap_rssi = ''
 
     def establish_ap_coords(self):
         for Dict in self.Device:
@@ -85,8 +86,8 @@ class AP_Move():
         for dict in self.Device:
             if dict['Type'] == 'AP':
                 if dict['Minimal RSSI'] != '':
-                    ap_rssi = dict['Minimal RSSI']
-                    return ap_rssi
+                    self.ap_rssi = dict['Minimal RSSI']
+                    return self.ap_rssi
 
     def ap_range(self):
         for dict in self.Device:
