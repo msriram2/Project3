@@ -23,9 +23,9 @@ class Input:
                 AP_Dict = {}
                 AP_Dict['Type'] = line[0]
                 AP_Dict['APName'] = line[1]
-                AP_Dict['Coord_x'] = int(line[2])
-                AP_Dict['Coord_y'] = int(line[3])
-                AP_Dict['Channel'] = int(line[4])
+                AP_Dict['Coord_x'] = line[2]
+                AP_Dict['Coord_y'] = line[3]
+                AP_Dict['Channel'] = line[4]
                 AP_Dict['Power'] = line[5]
                 AP_Dict['Frequency'] = line[6]
                 AP_Dict['Standard'] = line[7]
@@ -34,6 +34,7 @@ class Input:
                 AP_Dict['Supports_11r'] = line[10]
                 AP_Dict['Coverage Radius'] = line[11]
                 AP_Dict['Device Limit'] = line[12]
+                AP_Dict['Minimal RSSI'] = line[13]
                 self.Device.append(AP_Dict)
 
             if line[0] == 'CLIENT':
